@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+
+# Node (仅用于 tools/validate.js，无依赖)
+node_modules/
+npm-debug.log*
+
+# 本地临时文件
+*.log
+.tmp/

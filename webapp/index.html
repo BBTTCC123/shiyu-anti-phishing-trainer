@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>识渔计划 · 反钓鱼攻防训练营</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wm">教学模拟 DEMO</div>
+<div id="wrap">
+  <header>
+    <div class="logo">识渔<span>计划</span></div>
+    <div class="sub">SHIYU · 反钓鱼攻防训练营</div>
+  </header>
+  <main id="app">
+
+    <section id="v-home" class="view active">
+      <div class="hero">
+        <div class="fish" id="hero-pet"></div>
+        <p>信息之海里，钓鱼攻击最可怕的地方是它看起来正常。<br>
+        在这里反复练——判断、圈出破绽、听 AI 讲解，<br>直到识别成为条件反射。</p>
+      </div>
+      <div class="rankline" id="home-rank"></div>
+      <button class="btn primary" id="b-start"><b>拦截战 · 开始</b><small>拖拽分拣钓鱼消息 → 拆解台归类证物 → 出具风险画像</small></button>
+      <button class="btn danger" id="b-attack"><b>造浪者 · 组装实验室</b><small>拖卡装配+滑杆调参挑战AI防线，或自由撰写一封</small></button>
+      <button class="btn" id="b-profile"><b>我的画像</b><small>五维能力雷达 · 段位</small></button>
+      <button class="btn" id="b-about"><b>关于本作品</b><small>合规声明 · 技术方案摘要</small></button>
+    </section>
+
+    <section id="v-game" class="view">
+      <div class="q-head"><span class="phase" id="g-phase"></span><span class="timer" id="g-timer-txt"></span></div>
+      <div class="g-top">
+        <span class="lives" id="g-lives-wrap" title="数据完整度"><i id="g-lives" style="width:100%"></i></span>
+        <span class="g-score" id="g-score">0</span>
+        <span class="g-combo" id="g-combo"></span>
+        <span class="grow"></span>
+        <span id="g-wave"></span>
+      </div>
+      <div id="g-stage"></div>
+    </section>
+
+    <section id="v-report" class="view">
+      <div class="xp-head good">训 练 报 告</div>
+      <div class="rep-grid">
+        <div class="rep-box"><div class="v" id="r-pre">--</div><div class="k">前测识别率</div></div>
+        <div class="rep-box"><div class="v up" id="r-post">--</div><div class="k">后测识别率</div></div>
+        <div class="rep-box"><div class="v" id="r-rank">--</div><div class="k">段位</div></div>
+      </div>
+      <p id="r-extra" style="text-align:center;color:var(--amber);font-size:12.5px;margin:2px 0"></p>
+      <div class="card"><h3>五维能力画像</h3>
+        <div class="radar-wrap"><canvas id="radar-report" width="320" height="300"></canvas></div>
+      </div>
+      <div class="card"><h3>最需要补的课</h3><ul class="topmiss advice" id="r-topmiss"></ul></div>
+      <div class="card"><h3>个性化建议</h3><ul class="advice" id="r-advice"></ul></div>
+      <button class="btn danger" id="b-report-attack"><b>去造浪者模式</b><small>从攻击者视角再练一轮</small></button>
+      <button class="btn" id="b-home1">返回首页</button>
+    </section>
+
+    <section id="v-attack" class="view">
+      <div class="q-head"><span class="phase">造浪者 · 红蓝对抗</span>
+        <span><span class="round-dots" id="a-round"></span> <button class="voice-btn" id="a-voice">🔊 语音</button></span></div>
+      <div class="card" id="a-stage"></div>
+    </section>
+
+    <section id="v-profile" class="view">
+      <div class="xp-head good">我 的 画 像</div>
+      <div id="p-body"></div>
+      <button class="btn" id="b-home2">返回首页</button>
+      <button class="btn" id="b-reset"><b style="color:var(--red)">清空训练数据</b><small>重置进度与画像</small></button>
+    </section>
+
+    <section id="v-about" class="view about">
+      <div class="card"><h3>这是什么</h3>
+        <p>反钓鱼训练游戏：在<b>拦截战</b>里把涌来的消息拖进渔网或收件箱；在<b>拆解台</b>把破绽证物拖进类别槽；
+        在<b>造浪者组装实验室</b>拖卡调参造一封"钓鱼邮件"穿越扫描防线——或自由撰写。AI 蓝军安全官全程语音讲评，
+        最终生成五维「受骗风险画像」。</p></div>
+      <div class="card"><h3>合规声明</h3>
+        <ul>
+          <li>全部样本均为虚构（人名、机构、域名、链接均为演示虚构），所有链接不产生真实跳转；</li>
+          <li>本平台不提供任何消息发送 / 转发能力，界面全程带“教学模拟”水印；</li>
+          <li>免登录、匿名使用，作答数据仅保存在你的浏览器本地；</li>
+          <li>高发骗术类型参考国家反诈中心公开宣传内容。</li>
+        </ul></div>
+      <div class="card"><h3>技术方案摘要</h3>
+        <ul>
+          <li>题库：场景策略模板 + 结构化破绽标注（7 类），双人审核入库；</li>
+          <li>判分：规则引擎（域名 / 链接 / 附件特征）+ 自建数据集训练的文本分类器；</li>
+          <li>讲解：标注字段模板渲染为主，个性化建议由大模型流式生成；</li>
+          <li>本演示版为纯前端离线实现（localStorage 存档），后端化部署方案见作品开发文档。</li>
+        </ul></div>
+      <div class="card"><h3>队伍</h3><p>长春理工大学 · 计算机科学技术学院<br>［队伍名称 / 成员 / 指导教师 待定稿］</p></div>
+      <button class="btn" id="b-home3">返回首页</button>
+    </section>
+
+  </main>
+  <footer>识渔计划 SHIYU · 本平台所有样本均为虚构，仅用于识别训练<br>长春理工大学 · 计算机科学技术学院（参赛作品演示）</footer>
+</div>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
