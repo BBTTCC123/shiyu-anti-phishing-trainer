@@ -1,6 +1,6 @@
 # 识渔计划 SHIYU · Web 前端（v3 游戏版）
 
-反钓鱼攻防训练 H5 游戏：**拦截战**（拖拽分拣）+ **拆解台**（证物归类）+ **造浪者组装实验室**（拖卡调参/自由撰写）+ **AI 蓝军安全官**（打字机点评、语音、追问）。纯静态实现，零后端、零外部依赖、离线可运行，进度存 localStorage。
+反钓鱼攻防训练 H5 游戏：**拦截战**（拖拽分拣）+ **拆解台**（证物归类）+ **造浪者组装实验室**（拖卡调参/自由撰写）+ **AI 蓝军安全官**（打字机点评、语音、追问）+ **清白之证**（正常样本复盘 · 误报防治）。纯静态实现，零后端、零外部依赖、离线可运行，进度存 localStorage。
 
 ## 快速启动
 
@@ -30,6 +30,7 @@
 - `Officer` —— 安全官：逐条打字机气泡 + Web Speech 语音 + 快捷追问（`OFFICER_QA`，本地知识库回答）
 - `SFX` —— WebAudio 合成音效（拾取/命中/警报/连击），无音频文件
 - `drawRadar()/finishGame()/renderReport()` —— 五维画像与前后测报告
+- `legitNotesOf()/recordFalseAlarm()/buildLegitReview()` —— 清白之证：渲染正常样本教学说明；把误报（正常判为钓鱼）按 `FA_DIM_BY_PARTTYPE` 映射到能力维度并汇总进报告
 
 ## 数据结构（data.js）
 
@@ -48,7 +49,7 @@
 
 ## 如何扩展
 
-- **加样本**：按 Schema 在 `SAMPLES` 追加，并把 id 编入 `CAMPAIGN` 四波队列；靶点 id 必须与 `redflags.target` 一致（可跑 `node ../tools/validate.js` 核对）。
+- **加样本**：按 Schema 在 `SAMPLES` 追加，并把 id 编入 `CAMPAIGN` 四波队列；靶点 id 必须与 `redflags.target` 一致（可跑 `node ../tools/validate.js` 核对）。正常样本建议补 `legitNotes`（会渲染进拆解台「清白之证」与训练报告）；靶点可直接引用正文 `<span data-el="…">` 锚点，UI 会解析其文本。
 - **加检测规则**：`FREE_RULES` 追加 `{k, name, cls, det, re, know}` 即同时生效于自由撰写与复盘。
 - **换/接大模型**：`Officer.play(script)` 的 script 与 `OFFICER_QA[*].a()` 是唯一话术出口——替换为后端流式接口即可，前端打字机与 TTS 复用；`launchAttack` 的检出公式可替换为服务端分类器。
 - **音效/语音开关**：右上 `🔊`（localStorage `shiyu_voice`）。

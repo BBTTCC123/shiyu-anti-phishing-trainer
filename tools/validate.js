@@ -36,7 +36,7 @@ const KNOWN_CATEGORY = new Set(Object.keys(D.CATEGORY_NAME));
 //   - 邮件：meta.addrId = `${id}-addr`（data.js 末尾自动派生）
 //   - 链接页：meta.urlId = `${id}-url`
 //   - 显式 parts[].id
-//   - parts[].html 中 <span data-el="..."> 文本锚点（chip 标签会回退为类别键）
+//   - parts[].html 中 <span data-el="..."> 文本锚点（app.js 会解析片段文本作为证物标签）
 function resolveTargets(s) {
   const byPartId = new Set();
   const byDataEl = new Set();
@@ -73,8 +73,6 @@ for (const s of D.SAMPLES) {
     const ok = byPartId.has(target) || metaDerived.has(target) || byDataEl.has(target);
     if (!ok) {
       errors.push(`样本 ${s.id} 的 ${where}.target 无法解析（既不是 part.id、${s.carrier === "email" ? "addrId、" : ""}${s.carrier === "linkpage" ? "urlId、" : ""}也不是 data-el 锚点）：${target}`);
-    } else if (byDataEl.has(target) && !byPartId.has(target) && !metaDerived.has(target)) {
-      warn.push(`样本 ${s.id} 的 ${where} 目标 ${target} 是正文内 data-el 文本锚点：拆解台证物标签会回退显示类别键（可给该片段加 id 以显示文案）。`);
     }
   };
 
