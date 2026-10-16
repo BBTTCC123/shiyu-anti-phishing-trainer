@@ -1,0 +1,32 @@
+<view class="g-top">
+  <view class="lives"><view class="lives-i" style="width:{{lives}}%"></view></view>
+  <text class="g-score">{{score}}</text>
+  <text class="g-combo">{{comboTxt}}</text>
+  <view class="grow"></view>
+  <text class="dim">{{idx}}</text>
+</view>
+<view class="phase">{{phase}}</view>
+
+<view class="sorter">
+  <view class="dz {{dx < -40 ? 'hot-l' : ''}}"><text>钓\n鱼</text></view>
+  <view class="center">
+    <view class="timerbar {{urgent ? 'urgent' : ''}}"><view class="timerbar-i" style="width:{{timer}}%"></view></view>
+    <view class="gcard {{dragging ? 'dragging' : ''}}"
+      style="transform: translate({{dx}}px, {{dy}}px) rotate({{dx * 0.04}}deg)"
+      bindtouchstart="onCardStart" bindtouchmove="onCardMove" bindtouchend="onCardEnd">
+      <view wx:if="{{badge}}" class="gbadge {{badge.ok ? 'good' : 'bad'}}">{{badge.txt}}</view>
+      <block wx:if="{{card}}">
+        <view wx:if="{{card.head.k === 'email'}}" class="cf-meta">📮 {{card.head.from}} &lt;{{card.head.addr}}&gt;</view>
+        <view wx:if="{{card.head.k === 'email'}}" class="cf-subj">{{card.head.subj}}</view>
+        <view wx:if="{{card.head.k === 'sms'}}" class="cf-meta">💬 {{card.head.phone}}</view>
+        <view wx:if="{{card.head.k === 'web'}}" class="cf-meta">🌐 {{card.head.url}}</view>
+        <view wx:if="{{card.head.k === 'web'}}" class="cf-subj">{{card.head.subj}}</view>
+        <view wx:for="{{card.bits}}" wx:key="v" class="cf-bit {{item.k}}">{{item.k === 'link' ? '🔗' : item.k === 'att' ? '📎' : '▦'}} {{item.v}}</view>
+        <view class="cf-body">{{card.body}}</view>
+      </block>
+    </view>
+    <view class="qdots">{{queueDots}}</view>
+  </view>
+  <view class="dz {{dx > 40 ? 'hot-r' : ''}}"><text>正\n常</text></view>
+</view>
+<view class="hint">把消息卡拖进左侧渔网（钓鱼）或右侧收件箱（正常）</view>

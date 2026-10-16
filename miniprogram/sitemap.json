@@ -1,0 +1,4 @@
+{
+  "desc": "识渔计划小程序页面收录",
+  "rules": [{ "action": "allow", "page": "*" }]
+}

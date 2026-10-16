@@ -395,3 +395,234 @@ footer { text-align: center; color: var(--txt-dim); font-size: 10.5px; margin-to
 .g-card.shake-parent {}
 
 .dragging { transition: none !important; }
+
+/* ---------- AI 智能体「渔安」 ---------- */
+#agent-fab { position: fixed; right: 14px; bottom: 18px; width: 54px; height: 54px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 60;
+  background: radial-gradient(circle at 32% 28%, rgba(53,224,200,.5), rgba(13,21,36,.95));
+  border: 1px solid rgba(53,224,200,.65); box-shadow: 0 0 18px rgba(53,224,200,.4); }
+#agent-fab .opet-fish { font-size: 26px; animation: fishIdle 3.2s ease-in-out infinite; }
+#agent-panel { position: fixed; right: 10px; bottom: 82px; width: min(400px, calc(100vw - 20px)); height: min(560px, 72vh);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; z-index: 61;
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: translateY(16px); opacity: 0; pointer-events: none; transition: .22s ease;
+  box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+#agent-panel.open { transform: none; opacity: 1; pointer-events: auto; }
+.ag-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px;
+  border-bottom: 1px solid var(--line); font-size: 13.5px; color: #fff; }
+.ag-head em { font-style: normal; font-size: 11px; color: var(--cyan); }
+.ag-msgs { flex: 1; overflow-y: auto; padding: 10px 12px; display: flex; flex-direction: column; gap: 9px; }
+.ag-m { display: flex; gap: 8px; align-items: flex-start; }
+.ag-m.u { justify-content: flex-end; }
+.ag-m.u .ag-bubble { background: rgba(53,224,200,.14); border: 1px solid rgba(53,224,200,.4); }
+.ag-bubble { max-width: 82%; border-radius: 4px 12px 12px 12px; padding: 8px 11px; font-size: 12.5px;
+  line-height: 1.75; color: var(--txt); background: var(--panel2); border: 1px solid var(--line); word-break: break-all; }
+.ag-m .officer-ava { width: 32px; height: 32px; flex: none; font-size: 16px; }
+.ag-m .officer-ava .opet-fish { font-size: 16px; }
+.ag-quick { display: flex; flex-wrap: wrap; gap: 7px; padding: 8px 12px 4px; }
+.ag-input { display: flex; gap: 8px; padding: 8px 12px 12px; }
+.ag-input input { flex: 1; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+  color: var(--txt); font-size: 13px; padding: 9px 11px; }
+.ag-input input:focus { outline: none; border-color: rgba(53,224,200,.5); }
+.ag-input button { background: rgba(53,224,200,.15); border: 1px solid rgba(53,224,200,.5); color: var(--cyan);
+  border-radius: 10px; padding: 0 16px; cursor: pointer; font-size: 13px; }
+.ag-cfg { padding: 10px 12px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 7px; }
+.ag-cfg.hidden { display: none; }
+.ag-cfg p { font-size: 11px; color: var(--txt-dim); line-height: 1.6; }
+.ag-cfg input { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px;
+  color: var(--txt); font-size: 12px; padding: 7px 9px; }
+.ag-cfg button { align-self: flex-end; background: rgba(53,224,200,.15); border: 1px solid rgba(53,224,200,.5);
+  color: var(--cyan); border-radius: 8px; padding: 6px 18px; cursor: pointer; font-size: 12.5px; }
+
+/* ---------- 错题本 / 海报 ---------- */
+.wb-item { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin: 8px 0; background: var(--panel2); }
+.wb-item .wb-t { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.wb-item .wb-d { font-size: 12px; color: var(--txt); line-height: 1.75; }
+.wb-item .wb-d b { color: var(--red); }
+#poster-mask { position: fixed; inset: 0; background: rgba(4,8,16,.82); z-index: 80; display: flex;
+  flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+#poster-mask.hidden { display: none; }
+#poster-mask img { width: min(340px, 86vw); border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 18px 60px rgba(0,0,0,.6); }
+#poster-mask a { display: inline-block; padding: 10px 26px; border-radius: 10px; text-decoration: none;
+  background: rgba(53,224,200,.15); border: 1px solid rgba(53,224,200,.5); color: var(--cyan); font-size: 14px; }
+#poster-mask button { background: none; border: 1px solid var(--line); color: var(--txt-dim);
+  border-radius: 10px; padding: 8px 22px; cursor: pointer; font-size: 13px; }
+
+/* ---------- 智能体 v2：研判面板 ---------- */
+.ag-tabs { display: flex; gap: 8px; padding: 8px 12px 4px; border-bottom: 1px solid var(--line); }
+.ag-tab { flex: 1; text-align: center; font-size: 12.5px; padding: 7px 0; border-radius: 9px; cursor: pointer;
+  color: var(--txt-dim); border: 1px solid transparent; }
+.ag-tab.on { color: var(--cyan); border-color: rgba(53,224,200,.45); background: rgba(53,224,200,.08); }
+.ag-view { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.ag-view.hidden { display: none; }
+.ag-diag-intro { font-size: 12px; color: var(--txt); line-height: 1.8; padding: 12px 14px 6px; }
+.ag-diag-intro .dim { color: var(--txt-dim); font-size: 11px; }
+#ag-view-diag textarea { margin: 6px 12px 0; min-height: 96px; background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 10px; color: var(--txt); font-size: 12.5px; line-height: 1.7; padding: 10px 12px; resize: vertical; }
+#ag-view-diag textarea:focus { outline: none; border-color: rgba(53,224,200,.5); }
+#ag-diag-go { margin: 10px 12px 0; padding: 11px 0; text-align: center; border-radius: 10px; cursor: pointer;
+  background: linear-gradient(135deg, rgba(255,84,112,.25), rgba(255,84,112,.08));
+  border: 1px solid rgba(255,84,112,.55); color: var(--red); font-size: 13.5px; font-weight: 700; }
+#ag-diag-go:active { transform: translateY(1px); }
+#ag-view-diag .ag-quick { padding: 8px 12px 12px; }
+/* ---------- 智能体 v3：配置向导 / 流式光标 ---------- */
+.ag-setup { margin: 12px; padding: 14px; border: 1px solid rgba(255,184,77,.4); border-radius: 12px; background: rgba(255,184,77,.05); }
+.ag-setup b { font-size: 13.5px; color: var(--amber); }
+.ag-setup p { font-size: 11.5px; color: var(--txt); line-height: 1.7; margin: 6px 0; }
+.pro-chips { display: flex; gap: 8px; margin: 8px 0; }
+.pro-chip { font-size: 12px; padding: 5px 14px; border-radius: 16px; border: 1px solid var(--line);
+  color: var(--txt-dim); cursor: pointer; }
+.pro-chip.on { color: var(--cyan); border-color: rgba(53,224,200,.55); background: rgba(53,224,200,.1); }
+.ag-setup input { width: 100%; margin: 6px 0; background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 8px; color: var(--txt); font-size: 12px; padding: 8px 10px; box-sizing: border-box; }
+.ag-setup .dim { font-size: 10.5px; color: var(--txt-dim); }
+.setup-btns { display: flex; gap: 10px; margin-top: 8px; }
+.setup-btns button { flex: 1; border-radius: 9px; padding: 9px 0; font-size: 12.5px; cursor: pointer; }
+#ag-test { background: rgba(53,224,200,.15); border: 1px solid rgba(53,224,200,.5); color: var(--cyan); font-weight: 700; }
+#ag-offline { background: none; border: 1px solid var(--line); color: var(--txt-dim); }
+.ag-msg { font-size: 11.5px; margin-top: 8px; }
+.ag-msg .ok { color: var(--cyan); } .ag-msg .bad { color: var(--red); }
+.ag-bubble .cur { color: var(--cyan); animation: blink 1s steps(1) infinite; }
+
+/* ---------- 智能体浮动按钮 v2：文字胶囊 + 首访红点 ---------- */
+#agent-fab {
+  width: auto; height: auto; padding: 10px 16px 10px 12px; border-radius: 999px;
+  gap: 8px; display: flex; align-items: center;
+}
+#agent-fab .opet-fish { font-size: 22px; animation: fishIdle 3.2s ease-in-out infinite; }
+#agent-fab .fab-txt { font-size: 13px; font-weight: 700; color: #d7e3f4; white-space: nowrap; letter-spacing: .5px; }
+#agent-fab .fab-txt small { display: block; font-size: 9.5px; font-weight: 400; color: #7e8fa8; letter-spacing: 0; margin-top: 1px; }
+#agent-fab .fab-dot { position: absolute; top: -3px; right: -3px; width: 12px; height: 12px; border-radius: 50%;
+  background: #ff5470; border: 2px solid #0a0f1c; animation: dotPulse 1.4s ease infinite; }
+@keyframes dotPulse { 50% { box-shadow: 0 0 0 7px rgba(255,84,112,0); } 0% { box-shadow: 0 0 0 0 rgba(255,84,112,.55); } }
+
+/* ---------- 首页“关于”小图标 ---------- */
+#wrap { position: relative; }
+.about-ico { position: absolute; top: 10px; left: 10px; width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--line); background: rgba(13,21,36,.72); color: var(--txt-dim);
+  font-size: 15px; line-height: 1; cursor: pointer; z-index: 5; }
+.about-ico:hover { color: var(--cyan); border-color: rgba(53,224,200,.5); }
+
+/* ---------- 局内返回主页小按钮 ---------- */
+.home-mini { width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line);
+  background: rgba(13,21,36,.72); color: var(--txt-dim); font-size: 15px; line-height: 1;
+  cursor: pointer; flex: none; }
+.home-mini:hover { color: var(--cyan); border-color: rgba(53,224,200,.5); }
+
+/* ============ 一屏化紧凑布局（对齐小程序形态：无滚动条、单屏呈现） ============ */
+html { scrollbar-width: none; }
+::-webkit-scrollbar { width: 0; height: 0; }
+#wrap { padding: 10px 12px 14px; }
+header { padding-top: 4px; }
+.logo { font-size: 24px; letter-spacing: 3px; }
+.sub { font-size: 9px; letter-spacing: 2px; }
+#hero-pet { font-size: 46px; }
+.hero p { font-size: 11px; margin-top: 4px; line-height: 1.6; }
+.rankline { font-size: 11.5px; margin: 6px 0 2px; }
+.btn { padding: 10px 12px; margin: 8px 0; border-radius: 10px; }
+.btn b { font-size: 14px; } .btn small { font-size: 10.5px; }
+footer { margin-top: 10px; font-size: 9px; line-height: 1.5; }
+.q-head { margin: 6px 0 4px; font-size: 10.5px; }
+.g-top { margin: 6px 0 4px; }
+.g-sorter { gap: 6px; min-height: 0; }
+.dropzone { width: 44px; border-radius: 10px; }
+.dz-phish span, .dz-safe span { font-size: 11px; letter-spacing: 4px; }
+.g-timerbar { margin-bottom: 6px; }
+.g-card { padding: 10px; font-size: 12px; border-radius: 10px; }
+.g-card .cf-subj { font-size: 12.5px; margin: 4px 0; }
+.g-card .cf-body { font-size: 11.5px; margin-top: 4px; }
+.g-card .cf-bit { font-size: 11px; margin: 5px 0; }
+.g-queue { margin-top: 6px; font-size: 9px; letter-spacing: 4px; }
+.hint { margin: 8px 0; font-size: 11px; }
+.dm-board { padding: 8px; margin-top: 6px; }
+.dm-chips { min-height: 82px; margin-bottom: 8px; }
+.chip-ev { padding: 6px 9px; font-size: 10.5px; border-radius: 8px; }
+.dm-slots { gap: 6px; }
+.dm-slot { min-height: 44px; padding: 4px 6px; font-size: 9.5px; border-radius: 8px; }
+.dm-slot b { font-size: 10px; margin-bottom: 2px; }
+.dm-inspect { font-size: 10.5px; margin-top: 6px; min-height: 14px; }
+.dm-src { font-size: 10px; margin-bottom: 6px; }
+.rep-grid { margin: 8px 0; gap: 8px; }
+.rep-box { padding: 8px 4px; border-radius: 10px; }
+.rep-box .v { font-size: 20px; } .rep-box .k { font-size: 9.5px; }
+#r-extra { font-size: 11px; }
+.radar-wrap canvas { width: 236px !important; height: 221px !important; }
+.card { padding: 10px; margin: 8px 0; border-radius: 10px; }
+.card h3 { font-size: 12.5px; margin-bottom: 6px; }
+.advice li { font-size: 11px; margin: 5px 0 5px 14px; line-height: 1.6; }
+.topmiss li { font-size: 11px; }
+.xp-head { font-size: 13px; padding: 8px 0 2px; }
+.flaw { padding: 7px 9px; margin: 6px 0; border-radius: 8px; }
+.flaw .f-t { font-size: 11.5px; } .flaw .f-d { font-size: 11px; line-height: 1.6; }
+.lab-slots { margin: 6px 0; gap: 6px; }
+.lab-slot { min-height: 38px; font-size: 10.5px; border-radius: 9px; padding: 4px; }
+.lab-deck { gap: 6px; margin: 6px 0; }
+.lab-card { padding: 6px 4px; font-size: 10.5px; border-radius: 9px; }
+.lab-card .gi { font-size: 13px; margin-bottom: 2px; }
+.lab-card small { font-size: 8.5px; margin-top: 2px; }
+.sliders { margin: 4px 0; }
+.srow { margin: 4px 0; font-size: 11px; }
+.srow label { width: 62px; }
+.srow .sval { width: 28px; }
+.mode-tabs { margin: 6px 0; }
+.mtab { font-size: 11px; padding: 5px 0; }
+.atk-preview { font-size: 11px; }
+.freebox { min-height: 92px; font-size: 11.5px; padding: 8px 10px; }
+.detect-num { font-size: 18px; }
+.detect-bar { height: 10px; margin: 6px 0; }
+.runway { height: 62px; margin: 6px 0; }
+.gauge .gnum { font-size: 18px; }
+.gauge .gband { font-size: 9.5px; }
+.gauge-bar { height: 9px; margin: 4px 10px; }
+.wb-item { padding: 8px 10px; margin: 6px 0; }
+.wb-item .wb-t { font-size: 11.5px; } .wb-item .wb-d { font-size: 10.5px; }
+#agent-panel { height: min(520px, 68vh); }
+
+/* 报告页再压缩（一屏达标） */
+#v-report .btn { padding: 8px 12px; margin: 6px 0; }
+#v-report .btn b { font-size: 12.5px; } #v-report .btn small { font-size: 9.5px; }
+.radar-wrap { margin: 0; }
+#v-report .card { margin: 6px 0; padding: 8px; }
+.rep-grid { margin: 6px 0; }
+
+/* 报告页二轮压缩 */
+#v-report .btn { margin: 4px 0; padding: 7px 12px; }
+#v-report .radar-wrap canvas { width: 216px !important; height: 202px !important; }
+#v-report .card { padding: 7px; margin: 5px 0; }
+#v-report .advice li { margin: 3px 0 3px 12px; font-size: 10.5px; }
+#v-report .rep-box { padding: 6px 4px; }
+#r-extra { margin: 0; }
+#v-report .gauge-bar { margin: 3px 10px; }
+
+/* ---------- AI 训练诊断（报告页 / 画像页） ---------- */
+.ai-body { font-size: 11.5px; line-height: 1.9; color: var(--txt); word-break: break-word; min-height: 18px; }
+.ai-body .lead { display: block; font-weight: 700; color: var(--amber); margin-bottom: 3px; }
+.ai-body .cur { color: var(--cyan); animation: blink 1s steps(1) infinite; }
+.ai-src { display: inline-block; font-size: 9.5px; font-weight: 400; letter-spacing: 0; vertical-align: middle;
+  padding: 1px 8px; border-radius: 20px; border: 1px solid var(--line); color: var(--txt-dim); margin-left: 6px; }
+.ai-src.cloud { color: var(--cyan); border-color: rgba(53,224,200,.5); }
+.ai-src.local { color: var(--amber); border-color: rgba(255,184,77,.5); }
+.ai-regen { float: right; font-size: 10.5px; font-weight: 400; letter-spacing: 0; color: var(--cyan);
+  background: none; border: 1px solid rgba(53,224,200,.45); border-radius: 999px; padding: 2px 10px; cursor: pointer; }
+.ai-regen:hover { background: rgba(53,224,200,.14); }
+.ai-regen:disabled { opacity: .4; cursor: default; }
+
+/* ---------- 显眼返回首页胶囊 + 页脚关于 ---------- */
+.home-pill { display: inline-flex; align-items: center; gap: 5px; padding: 6px 15px;
+  border-radius: 999px; border: 1px solid rgba(53,224,200,.6); background: rgba(53,224,200,.12);
+  color: var(--cyan); font-size: 12.5px; font-weight: 700; cursor: pointer; flex: none;
+  box-shadow: 0 0 10px rgba(53,224,200,.15); }
+.home-pill:hover { background: rgba(53,224,200,.22); }
+.foot-link { background: none; border: none; color: var(--txt-dim); font-size: 10px;
+  cursor: pointer; text-decoration: underline dotted; margin-top: 4px; }
+.foot-link:hover { color: var(--cyan); }
+
+/* ---------- 判定行气泡内着色（替代独立标签） ---------- */
+.ag-bubble .lv { font-weight: 800; letter-spacing: .5px; }
+.lv-high { color: var(--red); }
+.lv-mid { color: var(--amber); }
+.lv-low { color: var(--cyan); }
+
+/* 修复：限定结果徽章范围在卡片区内（不再铺满整个分拣区） */
+.g-center { position: relative; }
+.g-badge { border-radius: 10px; }

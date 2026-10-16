@@ -1,0 +1,30 @@
+<view class="section">拆解台 · 把证物拖进对应破绽类别槽（点按可查看内容）</view>
+<view wx:if="{{!verdicts}}">
+  <view class="board" id="board">
+    <view class="chips">
+      <view wx:for="{{chips}}" wx:key="i" class="chip-ev {{item.done ? 'locked' : ''}}"
+        data-i="{{index}}" style="left:{{item.left}}rpx; top:{{item.top}}rpx"
+        bindtouchstart="onChipStart" bindtouchmove="onChipMove" bindtouchend="onChipEnd" bindtap="chipTap">
+        {{item.label.length > 14 ? item.label.slice(0,14) + '…' : item.label}}
+      </view>
+    </view>
+    <view class="slots">
+      <view wx:for="{{slots}}" wx:key="k" class="slot" data-cat="{{item.k}}">
+        <b>{{item.name}}</b>
+        <view class="placed-wrap">
+          <text wx:for="{{item.placed}}" wx:for-item="p" wx:key="label" class="placed {{p.ok ? '' : 'miss'}}">{{p.label}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="hint">已归位 {{done}} / {{chips.length}}</view>
+</view>
+
+<view wx:if="{{verdicts}}" class="card">
+  <view class="v-head">{{missedTxt}}</view>
+  <view wx:for="{{verdicts}}" wx:key="label" class="flaw {{item.ok ? 'hit' : 'miss'}}">
+    <view class="f-t">{{item.ok ? '✓ 首放命中' : '⚠ 试错归位'}} · {{item.cat}}</view>
+    <view class="f-d">{{item.label}}：{{item.explain}}</view>
+  </view>
+  <button class="btn-main" bindtap="next"><text class="bt">生成训练报告 →</text></button>
+</view>

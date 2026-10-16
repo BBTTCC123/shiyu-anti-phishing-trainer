@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/game/game",
+    "pages/dismantle/dismantle",
+    "pages/lab/lab",
+    "pages/agent/agent",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#0A0F1C",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "识渔计划",
+    "backgroundColor": "#0A0F1C",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

@@ -331,6 +331,7 @@ function sortCard(side) {
     else if (falseAlarm) badge("bad", "⚠ 误报 · 正常样本");
     else badge("bad", "✗ 漏判 · 钓鱼样本");
     if (falseAlarm) recordFalseAlarm(q);
+    logWrong(q.id, null);
   }
   refreshHud();
   const card = $("#g-card");
@@ -451,7 +452,7 @@ function bindChipDrag(el) {
       el.remove();
       const dim = DIM_OF_CATEGORY[c.r.category];
       S.dims[dim][c.tries > 1 ? "miss" : "hit"]++;
-      if (c.tries > 1) S.missCat[c.r.category] = (S.missCat[c.r.category] || 0) + 1;
+      if (c.tries > 1) { S.missCat[c.r.category] = (S.missCat[c.r.category] || 0) + 1; logWrong(c.q.id, c.r.category); }
       SFX.play("lock");
       $("#g-wave").textContent = "证物 " + (DM.chips.length - DM.placed);
       if (DM.placed >= DM.chips.length) $("#dm-done").disabled = false;
@@ -575,6 +576,12 @@ function renderReport() {
   const extra = $("#r-extra");
   if (extra && r.score != null) extra.textContent = "战绩：" + r.score + " 分 · 最高连击 x" + (r.bestCombo || 0) +
     " · 数据完整度 " + (G ? G.lives : "--") + "%" + (lg.length ? " · 误报 " + mistaken + "/" + lg.length : "");
+  /* AI 训练诊断：命中本轮缓存则直接展示，否则流式生成（云端→规则版兜底见 analyst.js） */
+  if (typeof Analyst !== "undefined") {
+    const rb = $("#ai-regen");
+    if (rb) rb.onclick = () => Analyst.render("ai-body", "ai-regen", true);
+    Analyst.render("ai-body", "ai-regen");
+  }
 }
 function drawRadar(cv, dims) {
   const ctx = cv.getContext("2d");
@@ -893,6 +900,81 @@ function reviewHTML() {
     <button class="btn" style="text-align:center" id="a-home">返回首页</button>`;
 }
 
+
+/* ---------- 错题本 ---------- */
+function logWrong(qid, cat) {
+  let wb = {};
+  try { wb = JSON.parse(localStorage.getItem("shiyu_wrong") || "{}"); } catch (e) {}
+  const e0 = wb[qid] || { cats: {}, n: 0 };
+  e0.n++;
+  if (cat) e0.cats[cat] = (e0.cats[cat] || 0) + 1;
+  wb[qid] = e0;
+  try { localStorage.setItem("shiyu_wrong", JSON.stringify(wb)); } catch (e) {}
+}
+function wrongBookHTML() {
+  let wb = {};
+  try { wb = JSON.parse(localStorage.getItem("shiyu_wrong") || "{}"); } catch (e) {}
+  const ids = Object.keys(wb).sort((a, b) => wb[b].n - wb[a].n);
+  if (!ids.length) return '<div class="card"><h3>错题本</h3><p style="font-size:12.5px;color:var(--txt-dim);line-height:1.9">暂无错题——分拣错误与拆解试错会自动归档到这里，并附对应破绽的知识点。</p></div>';
+  const items = ids.map((id) => {
+    const q = SAMPLE_MAP[id]; if (!q) return "";
+    const e = wb[id];
+    const cats = Object.keys(e.cats).length ? Object.keys(e.cats) : q.redflags.map((r) => r.category);
+    const know = cats.slice(0, 2).map((cc) => {
+      const rf = q.redflags.find((r) => r.category === cc);
+      return rf ? "<b>" + CATEGORY_NAME[cc] + "</b>：" + esc(rf.explain) : "";
+    }).filter(Boolean).join("<br>");
+    const carrier = q.carrier === "email" ? "邮件" : q.carrier === "sms" ? "短信" : "网页";
+    return '<div class="wb-item"><div class="wb-t">' + (q.phishing ? "🎣" : "✅") + " " + esc(q.scene) + " · " + carrier + " · 错 " + e.n + ' 次</div><div class="wb-d">' + (know || "识别要点见拆解讲解") + "</div></div>";
+  }).join("");
+  return '<div class="card"><h3>错题本（' + ids.length + "）<button id=\"wb-clear\" style=\"float:right;font-size:11px;color:var(--red);background:none;border:1px solid rgba(255,84,112,.4);border-radius:6px;padding:2px 8px\">清空</button></h3>" + items + "</div>";
+}
+
+/* ---------- 日期工具（战绩海报用） ---------- */
+function dateStr(d) { const x = d || new Date(); return x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0"); }
+
+/* ---------- 战绩海报 ---------- */
+function buildPoster() {
+  const r = S.report; if (!r) { alert("先完成一轮拦截战再生成海报"); return; }
+  const cv = document.createElement("canvas");
+  cv.width = 750; cv.height = 1200;
+  const c = cv.getContext("2d");
+  const bg = c.createLinearGradient(0, 0, 0, 1200);
+  bg.addColorStop(0, "#0C1424"); bg.addColorStop(1, "#070B14");
+  c.fillStyle = bg; c.fillRect(0, 0, 750, 1200);
+  c.fillStyle = "rgba(53,224,200,.06)"; c.beginPath(); c.arc(375, 210, 260, 0, 7); c.fill();
+  c.textAlign = "center";
+  c.fillStyle = "#7E8FA8"; c.font = "600 30px sans-serif"; c.fillText("S H I Y U", 375, 90);
+  c.font = "70px sans-serif"; c.fillText("🐟", 375, 210);
+  c.fillStyle = "#FFFFFF"; c.font = "bold 54px sans-serif"; c.fillText("识渔计划 · 训练战报", 375, 300);
+  c.fillStyle = "#FFB84D"; c.font = "bold 104px sans-serif"; c.fillText(r.rank, 375, 430);
+  c.fillStyle = "#7E8FA8"; c.font = "26px sans-serif";
+  c.fillText("战绩 " + (r.score ?? "--") + " 分 · 综合 " + r.avg + " · 前测 " + (r.pre ?? "--") + "% → 后测 " + (r.post ?? "--") + "%", 375, 480);
+  const cx = 375, cy = 720, R = 190;
+  const ang = (i) => -Math.PI / 2 + (i * 2 * Math.PI) / 5;
+  for (let ring = 1; ring <= 4; ring++) {
+    c.beginPath();
+    for (let i = 0; i <= 5; i++) { const a = ang(i % 5), rr = (R * ring) / 4; i ? c.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)) : c.moveTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)); }
+    c.strokeStyle = "rgba(53,224,200,.2)"; c.stroke();
+  }
+  c.beginPath();
+  DIMENSIONS.forEach((d, i) => { const a = ang(i), rr = (R * r.dims[d.key]) / 100; i ? c.lineTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)) : c.moveTo(cx + rr * Math.cos(a), cy + rr * Math.sin(a)); });
+  c.closePath(); c.fillStyle = "rgba(53,224,200,.25)"; c.fill(); c.strokeStyle = "#35E0C8"; c.lineWidth = 3; c.stroke();
+  c.font = "24px sans-serif"; c.fillStyle = "#D7E3F4";
+  DIMENSIONS.forEach((d, i) => { const a = ang(i); c.fillText(d.name + " " + r.dims[d.key], cx + (R + 62) * Math.cos(a), cy + (R + 62) * Math.sin(a) + 8); });
+  c.fillStyle = "#35E0C8"; c.font = "bold 34px sans-serif";
+  c.fillText("不教结论，练肌肉记忆", 340, 1010);
+  c.fillStyle = "#7E8FA8"; c.font = "22px sans-serif";
+  c.fillText(dateStr() + " · 长春理工大学 · 计算机科学技术学院", 375, 1055);
+  c.fillText("本平台所有样本均为虚构，仅用于识别训练", 375, 1090);
+  c.strokeStyle = "rgba(53,224,200,.5)"; c.strokeRect(600, 990, 115, 115);
+  c.fillStyle = "#7E8FA8"; c.font = "18px sans-serif"; c.fillText("扫码开玩", 657, 1158);
+  const url = cv.toDataURL("image/png");
+  $("#poster-img").src = url;
+  $("#poster-dl").href = url;
+  $("#poster-mask").classList.remove("hidden");
+}
+
 /* ---------- 画像 / 首页 / 初始化 ---------- */
 function renderProfile() {
   const b = $("#p-body");
@@ -903,11 +985,23 @@ function renderProfile() {
   const r = S.report, dims = r.dims;
   b.innerHTML = `
     <div class="rankline">段位：<b>${r.rank}</b> · 综合 ${r.avg}${r.score != null ? " · 战绩 " + r.score + " 分" : ""}</div>
+    <div class="card">
+      <h3>AI 训练诊断 <span class="ai-src" id="p-ai-src">AI 生成中…</span><button class="ai-regen" id="p-ai-regen">↻ 重新诊断</button></h3>
+      <div class="ai-body" id="p-ai-body"></div>
+    </div>
     <div class="radar-wrap"><canvas id="radar-p" width="320" height="300"></canvas></div>
     <div class="card"><h3>维度得分</h3><ul class="advice">${DIMENSIONS.map((d) => "<li><b>" + d.name + "</b>：" + dims[d.key] + " / 100</li>").join("")}</ul></div>
     ${r.legit && r.legit.length ? '<p style="text-align:center;color:var(--txt-dim);font-size:12px">正常样本误报：' + r.legit.filter((x) => x.mistaken).length + " / " + r.legit.length + "</p>" : ""}
-    ${S.atk && S.atk.best != null ? '<p style="text-align:center;color:var(--txt-dim);font-size:12px">造浪者最佳逃脱检出率：' + S.atk.best + "%</p>" : ""}`;
+    ${S.atk && S.atk.best != null ? '<p style="text-align:center;color:var(--txt-dim);font-size:12px">造浪者最佳逃脱检出率：' + S.atk.best + "%</p>" : ""}
+    ${wrongBookHTML()}`;
   drawRadar($("#radar-p"), dims);
+  if (typeof Analyst !== "undefined") {
+    const prb = $("#p-ai-regen");
+    if (prb) prb.onclick = () => Analyst.render("p-ai-body", "p-ai-regen", true);
+    Analyst.render("p-ai-body", "p-ai-regen");
+  }
+  const wclear = $("#wb-clear");
+  if (wclear) wclear.onclick = () => { localStorage.removeItem("shiyu_wrong"); renderProfile(); };
 }
 function renderHome() {
   const el = $("#home-rank");
@@ -925,14 +1019,27 @@ function init() {
   $("#b-attack").onclick = () => startAttack(true);
   $("#b-profile").onclick = () => { renderProfile(); show("profile"); };
   $("#b-about").onclick = () => show("about");
-  $("#b-home1").onclick = $("#b-home2").onclick = $("#b-home3").onclick = () => { Officer.cancel(); renderHome(); show("home"); };
+  ["b-home1", "b-home3", "r-home", "p-home"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.onclick = () => { Officer.cancel(); renderHome(); show("home"); };
+  });
   $("#b-report-attack").onclick = () => startAttack(true);
   const vb = $("#a-voice");
   if (vb) vb.onclick = () => Officer.toggle();
   Officer.syncBtn();
+  $("#g-home").onclick = () => {
+    if (G && !G.locked && $("#g-card") && !confirm("结束本轮并返回主页？（进度不计入报告）")) return;
+    Officer.cancel(); clearInterval(G && G.tick);
+    renderHome(); show("home");
+  };
+  $("#a-home-btn").onclick = () => { Officer.cancel(); renderHome(); show("home"); };
+  $("#b-poster").onclick = () => buildPoster();
+  $("#poster-close").onclick = () => $("#poster-mask").classList.add("hidden");
+  agentInit();
   $("#b-reset").onclick = () => {
     if (!confirm("确认清空全部战绩与画像？")) return;
     try { localStorage.removeItem(LS_KEY); } catch (e) {}
+    if (typeof Analyst !== "undefined") { try { localStorage.removeItem(Analyst.LS_CACHE); } catch (e) {} }
     S = { dims: freshDims(), missCat: {}, report: null, atk: { round: 1, mode: "genes", slots: {}, history: [], best: null, freeHits: {}, freeText: "", sl: { stealth: 50, aggro: 50, volume: 30 } } };
     renderProfile(); renderHome();
   };

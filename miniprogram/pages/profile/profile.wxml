@@ -1,0 +1,29 @@
+<view wx:if="{{!report}}" class="card">
+  <view class="none">还没有战绩记录。打一轮「拦截战」即可生成五维风险画像与段位。</view>
+  <button class="btn-main" bindtap="goHome"><text class="bs">返回首页</text></button>
+</view>
+
+<block wx:if="{{report}}">
+  <view class="rep-grid">
+    <view class="rep-box"><view class="v">{{preTxt}}</view><view class="k">前测识别率</view></view>
+    <view class="rep-box"><view class="v up">{{postTxt}}</view><view class="k">后测识别率</view></view>
+    <view class="rep-box"><view class="v">{{report.rank}}</view><view class="k">段位</view></view>
+  </view>
+  <view class="rankline">战绩 {{report.score}} 分 · 最高连击 x{{report.bestCombo || 0}}</view>
+  <view class="card">
+    <view class="ct">五维能力画像</view>
+    <canvas type="2d" id="radar" class="radar"></canvas>
+  </view>
+  <view class="card">
+    <view class="ct">维度得分</view>
+    <view wx:for="{{dimsTxt}}" wx:key="name" class="drow">{{item.name}}：{{item.v}} / 100</view>
+  </view>
+  <view class="card">
+    <view class="ct">错题本（{{wrongs.length}}）<text class="clear" bindtap="clearWrongs">清空</text></view>
+    <view wx:if="{{!wrongs.length}}" class="none">暂无错题——分拣错误与拆解试错会自动归档。</view>
+    <view wx:for="{{wrongs}}" wx:key="scene" class="wb">
+      <view class="wb-t">🎣 {{item.scene}} · 错 {{item.n}} 次</view>
+      <view class="wb-d">{{item.know}}</view>
+    </view>
+  </view>
+</block>

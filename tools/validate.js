@@ -89,6 +89,8 @@ for (const s of D.SAMPLES) {
       warn.push(`样本 ${s.id} 的 legitNotes.target 无法解析：${ln.target}`);
     }
   }
+  if (s.phishing && (s.redflags || []).length === 0) errors.push(`样本 ${s.id} 是钓鱼样本但没有任何 redflag 标注（拆解台将无证物可拆）`);
+  if (!s.phishing && (s.redflags || []).length > 0) errors.push(`样本 ${s.id} 是正常样本却带 redflag 标注（正常样本不应进拆解台，与清白之证矛盾）`);
 }
 
 for (const [bucket, ids] of Object.entries(D.CAMPAIGN)) {

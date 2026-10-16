@@ -1,0 +1,50 @@
+<view class="section">造浪者 · 第 {{round}} / 3 回合</view>
+<view class="tabs">
+  <view class="tab {{mode === 'genes' ? 'on' : ''}}" bindtap="switchMode" data-m="genes">组装实验室</view>
+  <view class="tab {{mode === 'free' ? 'on' : ''}}" bindtap="switchMode" data-m="free">自由撰写</view>
+</view>
+
+<block wx:if="{{mode === 'genes' && !result}}">
+  <view class="slots-row">
+    <view wx:for="{{groups}}" wx:key="key" class="lab-slot {{slots[item.key] ? 'filled' : ''}}">
+      {{slots[item.key] ? (slots[item.key] === 'g1' || slots[item.key] === 'g2' || slots[item.key] === 'g3' ? '🎭' : slots[item.key] === 'g4' || slots[item.key] === 'g5' || slots[item.key] === 'g6' ? '🧠' : '🧬') : '待装配'}} {{item.name}}
+    </view>
+  </view>
+  <view class="deck">
+    <view wx:for="{{genes}}" wx:key="id" class="lab-card {{slots[item.group] === item.id ? 'used' : ''}}"
+      bindtap="tapGene" data-g="{{item.id}}">
+      <text class="gi">{{item.group === 'skin' ? '🎭' : item.group === 'psych' ? '🧠' : '🧬'}}</text>
+      <text>{{item.name}}</text>
+      <text class="gd">{{item.det}} 检出</text>
+    </view>
+  </view>
+  <view class="sliders">
+    <view class="srow"><text>伪装度 {{sl.stealth}}</text><slider min="0" max="100" value="{{sl.stealth}}" data-k="stealth" bindchanging="onSlide" bindchange="onSlide" activeColor="#35e0c8" block-size="20"/></view>
+    <view class="srow"><text>激进度 {{sl.aggro}}</text><slider min="0" max="100" value="{{sl.aggro}}" data-k="aggro" bindchanging="onSlide" bindchange="onSlide" activeColor="#35e0c8" block-size="20"/></view>
+    <view class="srow"><text>投放量 {{sl.volume}}</text><slider min="0" max="100" value="{{sl.volume}}" data-k="volume" bindchanging="onSlide" bindchange="onSlide" activeColor="#35e0c8" block-size="20"/></view>
+  </view>
+  <view class="gauge">
+    <view class="gnum">{{pred ? '~' + pred + '% ±8' : '--'}}</view>
+    <view class="dim">预测检出率 · ≥60% 将被识破</view>
+  </view>
+  <button class="btn-main warn" bindtap="launch" disabled="{{!pred}}"><text class="bt">投放 → 穿越扫描防线</text></button>
+</block>
+
+<block wx:if="{{mode === 'free' && !result}}">
+  <textarea class="freebox" value="{{freeText}}" bindinput="onFreeInput" maxlength="300"
+    placeholder="写下你想骗倒别人的“钓鱼邮件”……（仅沙箱演示）"></textarea>
+  <button class="btn-main warn" bindtap="launchFree"><text class="bt">投放 → 规则引擎判检</text></button>
+</block>
+
+<view wx:if="{{result}}" class="card">
+  <view class="dnum">{{result.detect}}%</view>
+  <view class="verdict {{result.caught ? 'cy' : 'rd'}}">{{result.caught ? '🛡 防线识破了你的造物' : '🩸 你的造物咬中了数据化身'}}</view>
+  <view wx:for="{{result.comments}}" wx:key="index" class="cmt">🛡 {{item}}</view>
+  <button class="btn-main" bindtap="nextRound"><text class="bt">{{round < 3 ? '下一回合 →' : '查看复盘 →'}}</text></button>
+</view>
+
+<view wx:if="{{review}}" class="card">
+  <view class="v-head">攻防复盘</view>
+  <view wx:for="{{history}}" wx:key="round" class="cmt">第{{item.round}}回合（{{item.genes}}）· 检出率 {{item.detect}}% · {{item.caught ? '被识破' : '逃脱'}}</view>
+  <button class="btn-main" bindtap="again"><text class="bt">再来三回合</text></button>
+</view>
