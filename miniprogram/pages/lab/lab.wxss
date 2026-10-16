@@ -1,0 +1,20 @@
+.tabs { display: flex; gap: 14rpx; margin: 14rpx 24rpx; }
+.tab { flex: 1; text-align: center; font-size: 26rpx; padding: 14rpx 0; border: 1rpx solid #1c2b45; border-radius: 16rpx; color: #7e8fa8; }
+.tab.on { color: #ff5470; border-color: rgba(255,84,112,.55); background: rgba(255,84,112,.1); }
+.slots-row { display: flex; gap: 12rpx; margin: 14rpx 24rpx; }
+.lab-slot { flex: 1; min-height: 96rpx; border: 3rpx dashed #1c2b45; border-radius: 18rpx; display: flex; align-items: center; justify-content: center; font-size: 23rpx; color: #7e8fa8; text-align: center; }
+.lab-slot.filled { border-style: solid; border-color: rgba(255,84,112,.55); background: rgba(255,84,112,.1); color: #d7e3f4; }
+.deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12rpx; margin: 14rpx 24rpx; }
+.lab-card { background: #0d1524; border: 1rpx solid #1c2b45; border-radius: 18rpx; padding: 18rpx 8rpx; text-align: center; font-size: 24rpx; }
+.lab-card .gi { display: block; font-size: 34rpx; margin-bottom: 6rpx; }
+.lab-card .gd { display: block; font-size: 19rpx; color: #7e8fa8; margin-top: 4rpx; }
+.lab-card.used { opacity: .35; }
+.sliders { margin: 10rpx 30rpx; }
+.srow { font-size: 24rpx; color: #7e8fa8; margin: 16rpx 0; }
+.gauge { text-align: center; margin: 10rpx 0; }
+.gnum { font-size: 60rpx; font-weight: 800; color: #35e0c8; }
+.freebox { width: auto; margin: 20rpx 24rpx; min-height: 240rpx; background: #0d1524; border: 1rpx solid #1c2b45; border-radius: 18rpx; padding: 20rpx; font-size: 26rpx; color: #d7e3f4; }
+.dnum { text-align: center; font-size: 90rpx; font-weight: 800; color: #35e0c8; }
+.verdict { text-align: center; font-size: 30rpx; font-weight: 700; margin: 10rpx 0; }
+.cmt { font-size: 24rpx; color: #d7e3f4; line-height: 1.8; margin: 10rpx 0; word-break: break-all; }
+.v-head { text-align: center; font-size: 32rpx; font-weight: 800; color: #35e0c8; }

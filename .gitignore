@@ -1,15 +1,12 @@
-# OS / editor
-.DS_Store
-Thumbs.db
-desktop.ini
-.idea/
-.vscode/
-*.swp
+# 统一换行：文本按 LF 入库，Windows 批处理保留 CRLF
+* text=auto eol=lf
+*.bat text eol=crlf
 
-# Node (仅用于 tools/validate.js，无依赖)
-node_modules/
-npm-debug.log*
-
-# 本地临时文件
-*.log
-.tmp/
+# 二进制文件不做换行转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.docx binary
+*.zip binary

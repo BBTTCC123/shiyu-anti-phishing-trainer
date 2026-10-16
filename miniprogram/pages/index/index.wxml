@@ -1,0 +1,12 @@
+<view class="hero">
+  <view class="logo">识渔计划</view>
+  <view class="sub">SHIYU · 反钓鱼攻防训练营</view>
+  <view class="fish">🐟</view>
+  <view class="slogan">不教结论，练肌肉记忆</view>
+</view>
+<view class="rankline">{{rank}}</view>
+<button class="btn-main" bindtap="goCampaign"><text class="bt">拦截战 · 开始</text><text class="bs">拖拽分拣钓鱼消息 → 拆解台归类证物 → 风险画像</text></button>
+<button class="btn-main warn" bindtap="goLab"><text class="bt">造浪者 · 组装实验室</text><text class="bs">拖卡+调参挑战AI防线，或自由撰写一封</text></button>
+<button class="btn-main" bindtap="goAgent"><text class="bt">问渔安 · AI 安全官</text><text class="bs">读战绩 / 讲破绽 / 教玩法</text></button>
+<button class="btn-main" bindtap="goProfile"><text class="bt">我的画像</text><text class="bs">五维雷达 · 错题本</text></button>
+<view class="foot">教学模拟 · 全部样本虚构 · 仅用于识别训练</view>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>识渔计划 · 反钓鱼攻防训练营</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
 <div class="wm">教学模拟 DEMO</div>
@@ -24,12 +24,11 @@
       <div class="rankline" id="home-rank"></div>
       <button class="btn primary" id="b-start"><b>拦截战 · 开始</b><small>拖拽分拣钓鱼消息 → 拆解台归类证物 → 出具风险画像</small></button>
       <button class="btn danger" id="b-attack"><b>造浪者 · 组装实验室</b><small>拖卡装配+滑杆调参挑战AI防线，或自由撰写一封</small></button>
-      <button class="btn" id="b-profile"><b>我的画像</b><small>五维能力雷达 · 段位</small></button>
-      <button class="btn" id="b-about"><b>关于本作品</b><small>合规声明 · 技术方案摘要</small></button>
+      <button class="btn" id="b-profile"><b>我的画像</b><small>五维能力雷达 · 段位 · 错题本</small></button>
     </section>
 
     <section id="v-game" class="view">
-      <div class="q-head"><span class="phase" id="g-phase"></span><span class="timer" id="g-timer-txt"></span></div>
+      <div class="q-head"><button class="home-pill" id="g-home">⌂ 首页</button><span class="phase" id="g-phase"></span><span class="timer" id="g-timer-txt"></span></div>
       <div class="g-top">
         <span class="lives" id="g-lives-wrap" title="数据完整度"><i id="g-lives" style="width:100%"></i></span>
         <span class="g-score" id="g-score">0</span>
@@ -41,6 +40,7 @@
     </section>
 
     <section id="v-report" class="view">
+      <div class="q-head"><button class="home-pill" id="r-home">⌂ 首页</button></div>
       <div class="xp-head good">训 练 报 告</div>
       <div class="rep-grid">
         <div class="rep-box"><div class="v" id="r-pre">--</div><div class="k">前测识别率</div></div>
@@ -48,6 +48,10 @@
         <div class="rep-box"><div class="v" id="r-rank">--</div><div class="k">段位</div></div>
       </div>
       <p id="r-extra" style="text-align:center;color:var(--amber);font-size:12.5px;margin:2px 0"></p>
+      <div class="card">
+        <h3>AI 训练诊断 <span class="ai-src" id="ai-src">AI 生成中…</span><button class="ai-regen" id="ai-regen">↻ 重新诊断</button></h3>
+        <div class="ai-body" id="ai-body"></div>
+      </div>
       <div class="card"><h3>五维能力画像</h3>
         <div class="radar-wrap"><canvas id="radar-report" width="320" height="300"></canvas></div>
       </div>
@@ -58,19 +62,19 @@
         <ul class="advice" id="r-legit"></ul>
       </div>
       <button class="btn danger" id="b-report-attack"><b>去造浪者模式</b><small>从攻击者视角再练一轮</small></button>
-      <button class="btn" id="b-home1">返回首页</button>
+      <button class="btn" id="b-poster"><b>生成战绩海报</b><small>段位+雷达+战绩 · 保存图片分享</small></button>
     </section>
 
     <section id="v-attack" class="view">
-      <div class="q-head"><span class="phase">造浪者 · 红蓝对抗</span>
+      <div class="q-head"><button class="home-pill" id="a-home-btn">⌂ 首页</button><span class="phase">造浪者 · 红蓝对抗</span>
         <span><span class="round-dots" id="a-round"></span> <button class="voice-btn" id="a-voice">🔊 语音</button></span></div>
       <div class="card" id="a-stage"></div>
     </section>
 
     <section id="v-profile" class="view">
+      <div class="q-head"><button class="home-pill" id="p-home">⌂ 首页</button></div>
       <div class="xp-head good">我 的 画 像</div>
       <div id="p-body"></div>
-      <button class="btn" id="b-home2">返回首页</button>
       <button class="btn" id="b-reset"><b style="color:var(--red)">清空训练数据</b><small>重置进度与画像</small></button>
     </section>
 
@@ -98,9 +102,17 @@
     </section>
 
   </main>
-  <footer>识渔计划 SHIYU · 本平台所有样本均为虚构，仅用于识别训练<br>长春理工大学 · 计算机科学技术学院（参赛作品演示）</footer>
+  <div id="poster-mask" class="hidden">
+    <img id="poster-img" alt="战绩海报">
+    <a id="poster-dl" download="识渔计划战绩海报.png">保存图片</a>
+    <button id="poster-close">关闭</button>
+  </div>
+  <footer>识渔计划 SHIYU · 本平台所有样本均为虚构，仅用于识别训练<br>长春理工大学 · 计算机科学技术学院（参赛作品演示）<br><button id="b-about" class="foot-link">关于本作品</button></footer>
 </div>
-<script src="data.js"></script>
-<script src="app.js"></script>
+<script src="data.js?v=6"></script>
+<script src="app.js?v=9"></script>
+<script src="config.js?v=6"></script>
+<script src="agent.js?v=8"></script>
+<script src="analyst.js?v=1"></script>
 </body>
 </html>

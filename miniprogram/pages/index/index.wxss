@@ -1,0 +1,7 @@
+.hero { text-align: center; padding-top: 60rpx; }
+.logo { font-size: 60rpx; font-weight: 800; color: #fff; letter-spacing: 12rpx; }
+.sub { font-size: 22rpx; color: #7e8fa8; letter-spacing: 6rpx; margin-top: 8rpx; }
+.fish { font-size: 110rpx; margin-top: 40rpx; text-shadow: 0 0 40rpx rgba(53,224,200,.6); }
+.slogan { color: #35e0c8; font-size: 28rpx; margin-top: 16rpx; }
+.rankline { text-align: center; color: #7e8fa8; font-size: 25rpx; margin: 24rpx 0 10rpx; }
+.foot { text-align: center; color: #7e8fa8; font-size: 21rpx; margin-top: 40rpx; }

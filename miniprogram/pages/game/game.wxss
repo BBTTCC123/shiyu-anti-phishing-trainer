@@ -1,0 +1,29 @@
+.g-top { display: flex; align-items: center; gap: 16rpx; padding: 20rpx 24rpx 0; font-size: 24rpx; }
+.lives { width: 160rpx; height: 14rpx; border-radius: 8rpx; background: #111a2c; border: 1rpx solid #1c2b45; overflow: hidden; }
+.lives-i { height: 100%; background: linear-gradient(90deg, #35e0c8, #7fb4ff); }
+.g-score { color: #ffb84d; font-weight: 700; }
+.g-combo { color: #35e0c8; font-weight: 700; }
+.grow { flex: 1; }
+.phase { padding: 6rpx 24rpx 14rpx; color: #35e0c8; font-size: 26rpx; }
+.sorter { display: flex; gap: 12rpx; padding: 0 20rpx; align-items: stretch; }
+.dz { width: 100rpx; border-radius: 22rpx; border: 3rpx dashed #1c2b45; display: flex; align-items: center; justify-content: center;
+  color: #7e8fa8; font-size: 28rpx; font-weight: 700; }
+.dz.hot-l { border-color: #ff5470; background: rgba(255,84,112,.12); color: #ff5470; }
+.dz.hot-r { border-color: #35e0c8; background: rgba(53,224,200,.12); color: #35e0c8; }
+.center { flex: 1; }
+.timerbar { height: 10rpx; border-radius: 6rpx; background: #111a2c; margin-bottom: 14rpx; overflow: hidden; }
+.timerbar-i { height: 100%; background: #35e0c8; }
+.timerbar.urgent .timerbar-i { background: #ff5470; }
+.gcard { position: relative; background: #111a2c; border: 1rpx solid #1c2b45; border-radius: 22rpx;
+  padding: 24rpx; min-height: 420rpx; box-shadow: 0 10rpx 40rpx rgba(0,0,0,.4); }
+.gcard.dragging { box-shadow: 0 20rpx 60rpx rgba(53,224,200,.25); border-color: rgba(53,224,200,.5); }
+.cf-meta { font-size: 22rpx; color: #7e8fa8; word-break: break-all; }
+.cf-subj { font-size: 28rpx; font-weight: 700; color: #fff; margin: 8rpx 0; }
+.cf-bit { font-size: 24rpx; margin: 8rpx 0; word-break: break-all; color: #d7e3f4; }
+.cf-bit.link { color: #7fb4ff; } .cf-bit.att { color: #ffb84d; } .cf-bit.qr { color: #35e0c8; }
+.cf-body { margin-top: 10rpx; font-size: 25rpx; color: #d7e3f4; }
+.qdots { text-align: center; font-size: 22rpx; color: #7e8fa8; letter-spacing: 8rpx; margin-top: 16rpx; }
+.gbadge { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 22rpx; font-size: 44rpx; font-weight: 900; z-index: 5; }
+.gbadge.good { background: rgba(53,224,200,.16); color: #35e0c8; }
+.gbadge.bad { background: rgba(255,84,112,.18); color: #ff5470; }

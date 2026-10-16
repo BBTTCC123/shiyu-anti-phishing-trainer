@@ -1,0 +1,33 @@
+<view class="ag-head">
+  <text><b>渔安</b> · AI 安全官 <text class="badge">{{badge}}</text></text>
+</view>
+<view class="ag-tabs">
+  <view class="tab {{mode === 'diag' ? 'on' : ''}}" bindtap="switchTab" data-t="diag">🔍 遭遇研判</view>
+  <view class="tab {{mode === 'chat' ? 'on' : ''}}" bindtap="switchTab" data-t="chat">💬 自由问答</view>
+</view>
+
+<view wx:if="{{mode === 'diag'}}" class="diag">
+  <view class="intro">用你自己的话描述遭遇——任何内容都能研判：判定 / 可疑要素 / 剧本预测 / 行动建议。</view>
+  <textarea value="{{diagText}}" bindinput="onDiagInput" maxlength="300" placeholder="例：自称导师的人让我先把经费垫付转到指定卡号…（任何遭遇都可以）"></textarea>
+  <button class="go" bindtap="diagnose">立即研判</button>
+  <view class="chips">
+    <text wx:for="{{quick}}" wx:key="*this" class="chip" bindtap="quickTap" data-q="{{item}}">{{item}}</text>
+  </view>
+</view>
+
+<view wx:if="{{mode === 'chat'}}" class="chat">
+  <view wx:for="{{msgs}}" wx:key="index" class="m {{item.role === 'u' ? 'u' : 'a'}}">
+    <view wx:if="{{item.role === 'a'}}" class="ava">🐟</view>
+    <view class="bubble">
+    <text wx:if="{{item.done}}" class="lv {{item.lvcls}}">{{item.head}}</text>
+    <text wx:if="{{item.done && item.body}}">{{item.body}}</text>
+    <text wx:else>{{item.text}}</text>
+  </view>
+  </view>
+  <view id="agentEnd"></view>
+</view>
+
+<view class="inputbar" wx:if="{{mode === 'chat'}}">
+  <input value="{{input}}" bindinput="onInput" confirm-type="send" bindconfirm="send" placeholder="问渔安任何反诈问题…" />
+  <button bindtap="send">发送</button>
+</view>

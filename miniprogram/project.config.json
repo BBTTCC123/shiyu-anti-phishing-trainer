@@ -1,0 +1,14 @@
+{
+  "compileType": "miniprogram",
+  "libVersion": "3.4.3",
+  "appid": "touristappid",
+  "projectname": "shiyu-miniprogram",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": false,
+    "coverView": true
+  },
+  "description": "识渔计划·反钓鱼攻防训练营 微信小程序版"
+}
